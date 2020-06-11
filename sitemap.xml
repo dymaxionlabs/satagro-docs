@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
+     <loc>https://dymaxionlabs.github.io/satlomas-docs/</loc>
+     <lastmod>2020-06-11</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://dymaxionlabs.github.io/satlomas-docs/usage/</loc>
+     <lastmod>2020-06-11</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://dymaxionlabs.github.io/satlomas-docs/methodology/</loc>
+     <lastmod>2020-06-11</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://dymaxionlabs.github.io/satlomas-docs/deploy/</loc>
+     <lastmod>2020-06-11</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+</urlset>
