@@ -56,7 +56,7 @@ del servidor de PostgreSQL.
 
 ```bash
 # Add TimescaleDBs PPA
-sudo add-apt-repository -y ppa:timescale/timescaledb-ppa
+sudo add-apt-repository ppa:timescale/timescaledb-ppa
 sudo apt-get update
 
 # Now install appropriate package for PG version
@@ -73,7 +73,7 @@ sudo timescaledb-tune
 Ahora, instale la extensión PostGIS 3 para esta versión de PostgreSQL.
 
 ```bash
-sudo apt-get install -y postgresql-11-postgis-3
+sudo apt-get install postgresql-11-postgis-3
 ```
 
 Finalmente, reinicie la instancia de PostgreSQL.
@@ -87,7 +87,7 @@ sudo service postgresql restart
 Instale Python y otras dependencias como GDAL y el servidor de Redis.
 
 ```bash
-sudo apt-get install -y \
+sudo apt-get install \
   build-essential \
   git \
   gdal-bin \
@@ -130,7 +130,7 @@ Para instalar las dependencias correctas del backend, debe instalar el
 manejador de paquetes [Pipenv](https://pipenv.pypa.io/en/latest/).
 
 ```bash
-sudo -H pip3 install -U pipenv
+pip install --user -U pipenv
 ```
 
 Luego, ejecute lo siguiente para instalar todas las dependencias necesarias.
@@ -183,25 +183,25 @@ psql satlomas -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE"
 
 Para que la plataforma pueda descargar los productos del satélite Sentinel-1
 y Sentinel-2 de la ESA, es necesario estar registrado en [Copernicus Open
-Access Hub][2].
+Access Hub][1].
 
-Para registrase, ingrese [aquí][3]. Tome nota del **nombre de usuario** y
+Para registrase, ingrese [aquí][2]. Tome nota del **nombre de usuario** y
 **contraseña** dado que será necesario al momento de configurar el backend.
 
-  [2]: https://scihub.copernicus.eu/
-  [3]: https://scihub.copernicus.eu/dhus/#/self-registration
+  [1]: https://scihub.copernicus.eu/
+  [2]: https://scihub.copernicus.eu/dhus/#/self-registration
 
 
 #### Registración en NASA EarthData
 
 Para descargar los productos de MODIS VI, es necesario estar registrado en
-[NASA EarthData][4].
+[NASA EarthData][2].
 
-Puede registrarse ingresando [aquí][5]. Tome nota del **nombre de usuario** y
+Puede registrarse ingresando [aquí][2]. Tome nota del **nombre de usuario** y
 **contraseña** dado que será necesario al momento de configurar el backend.
 
-  [4]: https://urs.earthdata.nasa.gov/
-  [5]: https://urs.earthdata.nasa.gov/users/new
+  [1]: https://urs.earthdata.nasa.gov/
+  [2]: https://urs.earthdata.nasa.gov/users/new
 
 
 #### Variables de entorno
@@ -219,18 +219,18 @@ configuradas para el funcionamiento de la plataforma.
 
 | Variable      | Descripción |
 | ------------- | --------------------------------------------------- |
-| `SECRET_KEY`  | String único de caracteres alfanuméricos, utilizado para firmas criptográficas. Puede generar uno [aquí][6].
+| `SECRET_KEY`  | String único de caracteres alfanuméricos, utilizado para firmas criptográficas. Puede generar uno [aquí][1].
 | `ALLOWED_HOSTS` | Lista de *hosts* habilitados. Debería ingresar el dominio y/o IP pública del servidor |
 | `DB_USER` | Usuario de la BD (debería ser el nombre del usuario actual) |
 | `DB_PASSWORD` | Contraseña de la BD (la contraseña que definió antes) |
-| `SCIHUB_USER` | Usuario de [SciHub][7] |
-| `SCIHUB_PASS` | Contraseña de [SciHub][7] |
-| `MODIS_USER`  | Usuario de [EarthData][8] |
-| `MODIS_PASS`  | Contraseña de [EarthData][8] |
+| `SCIHUB_USER` | Usuario de [SciHub][2] |
+| `SCIHUB_PASS` | Contraseña de [SciHub][2] |
+| `MODIS_USER`  | Usuario de [EarthData][3] |
+| `MODIS_PASS`  | Contraseña de [EarthData][3] |
 
-  [6]: https://djecrety.ir/
-  [7]: #registracion-en-copernicus-open-access-hub
-  [8]: #registracion-en-nasa-earthdata
+  [1]: https://djecrety.ir/
+  [2]: #registracion-en-copernicus-open-access-hub
+  [3]: #registracion-en-nasa-earthdata
 
 ### Inicialización
 
@@ -242,14 +242,7 @@ pipenv shell
 ./manage.py migrate   # Correr las migraciones
 ```
 
-Antes de continuar, debería generar los archivos estáticos, necesarios para el
-panel de administrador:
-
-```bash
-./manage.py collectstatic
-```
-
-Finalmente, cree un *superusuario* para SatLomas. Este será el primer usuario
+Luego, cree un *superusuario* para SatLomas. Este será el primer usuario
 administrador, con el que podrá registrar nuevos administradores o usuarios.
 
 ```bash
@@ -296,11 +289,11 @@ npm run build
 !!! tip "Más información"
 
     Esta sección de la documentación está basada en la guía [How To Set Up
-    Django with Postgres, Nginx, and Gunicorn on Ubuntu 18.04][9], de Digital
+    Django with Postgres, Nginx, and Gunicorn on Ubuntu 18.04][1], de Digital
     Ocean. Para más información para depurar los servicios, puede
     consultarla.
 
-  [9]: https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-18-04
+  [1]: https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-18-04
 
 
 ### Backend
@@ -308,7 +301,7 @@ npm run build
 Comience creando un nuevo archivo para el socket del servicio del backend:
 
 ```bash
-sudo nano /etc/systemd/system/gunicorn.socket
+sudo nano /etc/systemd/system/gunicorn.service
 ```
 
 Copie lo siguiente dentro del archivo:
@@ -360,7 +353,7 @@ ExecStart=/home/ubuntu/.local/share/virtualenvs/satlomas-back-XVGhZdP0/bin/gunic
           --timeout 600 \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
-          geolomas.wsgi:application
+          satlomas.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -456,7 +449,7 @@ server {
 
   location / {
     include proxy_params;
-    proxy_pass http://unix:/run/gunicorn.sock;
+    proxy_pass http://unix:/home/ubuntu/satlomas-back/satlomas.sock;
 
     proxy_connect_timeout       600;
     proxy_send_timeout          600;
@@ -533,29 +526,29 @@ subdominios).
 #### Configuración SSL
 
 Es posible configurar SSL a través de los certificados gratuitos de [Let's
-Encrypt][10].
+Encrypt][1].
 
 !!! tip "Instrucciones para Ubuntu 18.04"
 
     Las siguientes instrucciones están basadas en la guía de Certbot para la
     distribución de Ubuntu 18.04 y Nginx.  Si desea ver más información puede
-    acceder [aquí][11].
+    acceder [aquí][2].
 
 Deberá agregar el PPA de Certbot a la lista de repositorios.  Para esto,
 ejecute los siguientes comandos:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y universe
-sudo add-apt-repository -y ppa:certbot/certbot
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get update
 ```
 
 Ejecute este comando para instalar Certbot:
 
 ```bash
-sudo apt-get install -y certbot python3-certbot-nginx
+sudo apt-get install certbot python3-certbot-nginx
 ```
 
 Ahora ejecute este comando para obtener un certificado y hacer que Certbot
@@ -569,5 +562,5 @@ sudo certbot --nginx
 El certificado se debería actualizar automaticamente a través del servicio de
 Certbot.
 
-  [10]: https://letsencrypt.org/
-  [11]: https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx
+  [1]: https://letsencrypt.org/
+  [2]: https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx
