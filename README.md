@@ -1,10 +1,7 @@
-# SatLomas - Documentación
-
-Este repositorio contiene documentación acerca de SatLomas, la plataforma de
-monitoreo satelital del ecosistema de las Lomas.
+# SatAgro - Documentación
 
 La documentación acutalizada se puede acceder desde:
-https://dymaxionlabs.github.io/satlomas-docs/
+https://dymaxionlabs.github.io/satagro-docs/
 
 
 ## Instalación
